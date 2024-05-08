@@ -105,7 +105,11 @@ function App() {
             <input type="range" min={MIN_BPM} max={MAX_BPM} value={bpm} className="bpm-slider"
                    onMouseUp={(evt) => {
                        setRealBpm(parseInt(evt.currentTarget.value, 10))
-                   }} onChange={(evt) => setBpm(parseInt(evt.currentTarget.value, 10))}/>
+                   }}
+                   onTouchEnd={(evt) => {
+                       setRealBpm(parseInt(evt.currentTarget.value, 10))
+                   }}
+                   onChange={(evt) => setBpm(parseInt(evt.currentTarget.value, 10))}/>
 
             <div className="controls">
                 <button id="play" onClick={() => {
