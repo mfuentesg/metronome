@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ButtonToggle from './components/toggle.tsx';
 import { PauseIcon, PlayIcon } from './components/icons.tsx';
+import { AudioContext as ReactAudioContext } from './audioContext'
 
 import './App.css';
 import {
@@ -15,10 +16,9 @@ import {
 
 let interval = 0.0;
 let nextNoteTime = 0.0;
-const context = new AudioContext();
-const stereoPanner = context.createStereoPanner();
 
 function App() {
+  const { context, stereoPanner } = useContext(ReactAudioContext);
   const [bpm, setBpm] = useState<number>(120);
   const [playing, setPlaying] = useState<boolean>(false);
   const [timesPerBeat] = useState<number>(1);
