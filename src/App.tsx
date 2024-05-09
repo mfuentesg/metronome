@@ -1,128 +1,129 @@
-import './App.css'
-import {useEffect, useState} from "react";
+import React, { useEffect, useState } from 'react';
+import ButtonToggle from './components/toggle.tsx';
+import { PauseIcon, PlayIcon } from './components/icons.tsx';
 
-const MAX_BPM = 400 as const
-const MIN_BPM = 20 as const
-const SOUND_FREQUENCY = 800 as const;
-
-const PlayIcon = () => {
-    return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-    </svg>
-}
-
-const PauseIcon = () => {
-    return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="6" y="4" width="4" height="16"></rect>
-        <rect x="14" y="4" width="4" height="16"></rect>
-    </svg>
-}
-
+import './App.css';
+import {
+  DEFAULT_INTERVAL_TIMEOUT,
+  MAX_BPM,
+  MIN_BPM,
+  PANNER_LEFT,
+  PANNER_RIGHT,
+  PANNER_STEREO,
+  SOUND_FREQUENCY
+} from './constants.ts';
 
 let interval = 0.0;
 let nextNoteTime = 0.0;
-const context = new AudioContext()
-const stereoPanner = context.createStereoPanner()
+const context = new AudioContext();
+const stereoPanner = context.createStereoPanner();
 
 function App() {
-    const [bpm, setBpm] = useState<number>(120)
-    const [playing, setPlaying] = useState<boolean>(false)
-    const [timesPerBeat] = useState<number>(1)
+  const [bpm, setBpm] = useState<number>(120);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [timesPerBeat] = useState<number>(1);
+  const [panner, setPanner] = useState<number>(0);
 
-    useEffect(() => {
-        if (!playing) {
-            return
-        }
-
-        interval = setInterval(() => {
-            while (nextNoteTime < context.currentTime + 0.1) {
-                scheduleNote(nextNoteTime);
-                nextNote()
-            }
-        }, 25)
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [bpm, playing])
-
-    const increase = () => {
-        if (bpm + 1 > MAX_BPM) {
-            return
-        }
-        setBpm(bpm + 1)
-    }
-    const decrease = () => {
-        if (bpm - 1 < MIN_BPM) {
-            return
-        }
-        setBpm(bpm - 1)
+  useEffect(() => {
+    if (!playing) {
+      return;
     }
 
-    const nextNote = () => {
-        const secondsPerBeat = (60.0 / bpm) / timesPerBeat;
-        nextNoteTime += secondsPerBeat;
+    interval = setInterval(() => {
+      while (nextNoteTime < context.currentTime + 0.1) {
+        playBeat(nextNoteTime);
+        nextNote();
+      }
+    }, DEFAULT_INTERVAL_TIMEOUT);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [bpm, playing]);
+
+  useEffect(() => {
+    stereoPanner.pan.value = panner;
+  }, [panner]);
+
+  const increaseTime = () => {
+    if (bpm + 1 > MAX_BPM) {
+      return;
     }
+    setBpm(bpm + 1);
+  };
 
-    const scheduleNote = (time: number) => {
-        const osc = context.createOscillator()
-        osc.connect(stereoPanner)
-        osc.frequency.value = SOUND_FREQUENCY
-        stereoPanner.connect(context.destination)
-
-        osc.start(time);
-        osc.stop(time + 0.03);
+  const decreaseTime = () => {
+    if (bpm - 1 < MIN_BPM) {
+      return;
     }
+    setBpm(bpm - 1);
+  };
 
-    const onToggle = () => {
-        if (playing) {
-            clearInterval(interval)
-            setPlaying(false)
-            return
-        }
+  const nextNote = () => {
+    const secondsPerBeat = (60.0 / bpm) / timesPerBeat;
+    nextNoteTime += secondsPerBeat;
+  };
 
-        setPlaying(true)
+  const playBeat = (time: number) => {
+    const osc = context.createOscillator();
+    osc.connect(stereoPanner);
+    osc.frequency.value = SOUND_FREQUENCY;
+    stereoPanner.connect(context.destination);
+
+    osc.start(time);
+    osc.stop(time + 0.03);
+  };
+
+  const onTogglePlayingState = () => {
+    if (playing) {
+      clearInterval(interval);
     }
+    setPlaying(!playing);
+  };
 
-    function setPannerToLeft(){ stereoPanner.pan.value = -1 }
-    function setPannerToRight(){ stereoPanner.pan.value = 1 }
-    function setPannerToStereo(){ stereoPanner.pan.value = 0 }
+  function setPannerValue(value: number) {
+    return () => setPanner(value);
+  }
 
-    return (
-        <div className="container">
-            <div className="precision-controls">
-                <button onClick={decrease}>-</button>
-                <div className="bpm">
-                    <p className="bpm-value">{bpm}</p>
-                    <p>bpm</p>
-                </div>
-                <button onClick={increase}>+</button>
-            </div>
+  function onSliderEvent(evt: React.MouseEvent<HTMLInputElement> | React.TouchEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) {
+    setBpm(parseInt(evt.currentTarget.value, 10));
+  }
 
-            <input type="range" min={MIN_BPM} max={MAX_BPM} value={bpm} className="bpm-slider"
-                   onMouseUp={(evt) => {
-                       setBpm(parseInt(evt.currentTarget.value, 10))
-                   }}
-                   onTouchEnd={(evt) => {
-                       setBpm(parseInt(evt.currentTarget.value, 10))
-                   }}
-                   onChange={(evt) => setBpm(parseInt(evt.currentTarget.value, 10))}/>
-
-            <div className="controls">
-                <button id="play" onClick={() => {
-                    setPlaying(!playing)
-                    onToggle()
-                }}>{playing ? <PauseIcon/> : <PlayIcon/>}</button>
-            </div>
-            <div>
-                <button onClick={setPannerToLeft}>Left Gain</button>
-                <button onClick={setPannerToStereo}>Stereo</button>
-                <button onClick={setPannerToRight}>Right Gain</button>
-            </div>
+  return (
+    <div className="container">
+      <div className="precision-controls">
+        <button onClick={decreaseTime}>-</button>
+        <div className="bpm">
+          <p className="bpm-value">{bpm}</p>
+          <p>bpm</p>
         </div>
-    )
+        <button onClick={increaseTime}>+</button>
+      </div>
+
+      <input
+        type="range"
+        min={MIN_BPM}
+        max={MAX_BPM}
+        value={bpm}
+        className="bpm-slider"
+        onMouseUp={onSliderEvent}
+        onTouchEnd={onSliderEvent}
+        onChange={onSliderEvent}
+      />
+
+      <div className="controls">
+        <button id="play" onClick={onTogglePlayingState}>
+          {playing ? <PauseIcon /> : <PlayIcon />}
+        </button>
+      </div>
+
+      <div className="gain-controls">
+        <ButtonToggle toggled={panner === PANNER_LEFT} onClick={setPannerValue(PANNER_LEFT)}>Left Gain</ButtonToggle>
+        <ButtonToggle toggled={panner === PANNER_STEREO} onClick={setPannerValue(PANNER_STEREO)}>Stereo</ButtonToggle>
+        <ButtonToggle toggled={panner === PANNER_RIGHT} onClick={setPannerValue(PANNER_RIGHT)}>Right Gain</ButtonToggle>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

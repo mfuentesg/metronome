@@ -27,6 +27,8 @@
 
 .bpm-value {
     font-size: 5em !important;
+    font-weight: bolder;
+    padding: 5px;
 }
 
 .bpm-slider {
@@ -44,4 +46,20 @@
     line-height: 12px;
     text-align: center;
     vertical-align: middle;
+}
+
+.gain-controls {
+    margin-top: 10px;
+}
+
+.gain-controls button {
+    margin: 0 5px;
+}
+
+.gain-controls button:first-child {
+    margin-left: 0;
+}
+
+.gain-controls button:last-child {
+    margin-right: 0;
 }

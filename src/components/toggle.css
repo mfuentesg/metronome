@@ -1,0 +1,10 @@
+.button-toggled {
+    background-color: grey;
+}
+
+@media (prefers-color-scheme: light) {
+    .button-toggled {
+        background-color: #36375c;
+        color: white;
+    }
+}
