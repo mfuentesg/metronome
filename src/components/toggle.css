@@ -1,5 +1,6 @@
 .button-toggled {
-    background-color: grey;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 @media (prefers-color-scheme: light) {
