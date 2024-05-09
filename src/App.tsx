@@ -28,7 +28,6 @@ const stereoPanner = context.createStereoPanner()
 
 function App() {
     const [bpm, setBpm] = useState<number>(120)
-    const [realBpm, setRealBpm] = useState<number>(120)
     const [playing, setPlaying] = useState<boolean>(false)
     const [timesPerBeat] = useState<number>(1)
 
@@ -47,7 +46,7 @@ function App() {
         return () => {
             clearInterval(interval)
         }
-    }, [realBpm, playing])
+    }, [bpm, playing])
 
     const increase = () => {
         if (bpm + 1 > MAX_BPM) {
@@ -63,7 +62,7 @@ function App() {
     }
 
     const nextNote = () => {
-        const secondsPerBeat = (60.0 / realBpm) / timesPerBeat;
+        const secondsPerBeat = (60.0 / bpm) / timesPerBeat;
         nextNoteTime += secondsPerBeat;
     }
 
@@ -104,10 +103,10 @@ function App() {
 
             <input type="range" min={MIN_BPM} max={MAX_BPM} value={bpm} className="bpm-slider"
                    onMouseUp={(evt) => {
-                       setRealBpm(parseInt(evt.currentTarget.value, 10))
+                       setBpm(parseInt(evt.currentTarget.value, 10))
                    }}
                    onTouchEnd={(evt) => {
-                       setRealBpm(parseInt(evt.currentTarget.value, 10))
+                       setBpm(parseInt(evt.currentTarget.value, 10))
                    }}
                    onChange={(evt) => setBpm(parseInt(evt.currentTarget.value, 10))}/>
 
