@@ -11,6 +11,7 @@ export type Panner = typeof PANNER_LEFT | typeof PANNER_RIGHT | typeof PANNER_ST
 
 type AudioProviderState = {
   playing: boolean;
+  panner: Panner;
   bpm: number;
   play: () => void;
   pause: () => void;
@@ -21,6 +22,7 @@ type AudioProviderState = {
 const initialState: AudioProviderState = {
   playing: false,
   bpm: 120,
+  panner: PANNER_STEREO,
   play: () => null,
   pause: () => null,
   setPanner: () => 0,
@@ -41,7 +43,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
   const [playing, setPlaying] = useState(false);
   const [bpm, setBpm] = useState<number>(120);
   const [timesPerBeat] = useState<number>(1);
-  const [panner, setPanner] = useState<number>(0);
+  const [panner, setPanner] = useState<Panner>(PANNER_STEREO);
 
   const playBeat = (time: number) => {
     const osc = context.createOscillator();
@@ -82,6 +84,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
   const value = {
     playing,
     bpm,
+    panner,
     pause: () => setPlaying(false),
     play: () => setPlaying(true),
     setBpm: setBpm,

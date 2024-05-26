@@ -8,7 +8,7 @@ import { Panner } from '@/components/AudioProvider';
 import { PANNER_LEFT, PANNER_RIGHT, PANNER_STEREO } from '@/constants.ts';
 
 export default function Settings() {
-  const { setPanner } = useAudio();
+  const { setPanner, panner } = useAudio();
 
   const setPannerHandler = (panner: Panner) => () => {
     setPanner(panner);
@@ -22,16 +22,22 @@ export default function Settings() {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4" side="bottom">
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-3">
           <Label>Panning configuration</Label>
-          <ToggleGroup type="single">
-            <ToggleGroupItem value="left" onClick={setPannerHandler(PANNER_LEFT)}>
+          <ToggleGroup type="single" value={panner.toString()}>
+            <ToggleGroupItem value={PANNER_LEFT.toString()} onClick={setPannerHandler(PANNER_LEFT)}>
               Left Speaker
             </ToggleGroupItem>
-            <ToggleGroupItem value="stereo" onClick={setPannerHandler(PANNER_STEREO)}>
+            <ToggleGroupItem
+              value={PANNER_STEREO.toString()}
+              onClick={setPannerHandler(PANNER_STEREO)}
+            >
               Stereo
             </ToggleGroupItem>
-            <ToggleGroupItem value="right" onClick={setPannerHandler(PANNER_RIGHT)}>
+            <ToggleGroupItem
+              value={PANNER_RIGHT.toString()}
+              onClick={setPannerHandler(PANNER_RIGHT)}
+            >
               Right Speaker
             </ToggleGroupItem>
           </ToggleGroup>
