@@ -23,7 +23,7 @@ export default function Settings() {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4" side="bottom">
         <div className="flex flex-col space-y-3">
-          <Label>Panning configuration</Label>
+          <Label>Panning</Label>
           <ToggleGroup type="single" value={panner.toString()}>
             <ToggleGroupItem value={PANNER_LEFT.toString()} onClick={setPannerHandler(PANNER_LEFT)}>
               Left Speaker
