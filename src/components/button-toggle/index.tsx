@@ -1,5 +1,5 @@
 import React from 'react';
-import './toggle.css';
+import './styles.css';
 
 interface Props {
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
@@ -8,5 +8,9 @@ interface Props {
 }
 
 export default function ButtonToggle({ onClick, children, toggled = false }: Props) {
-  return <button onClick={onClick} className={toggled ? 'button-toggled' : ''}>{children}</button>;
+  return (
+    <button onClick={onClick} className={toggled ? 'button-toggled' : ''}>
+      {children}
+    </button>
+  );
 }
