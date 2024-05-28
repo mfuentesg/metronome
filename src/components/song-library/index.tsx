@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Drawer,
   DrawerClose,
@@ -8,9 +9,18 @@ import {
   DrawerTrigger
 } from '@/components/ui/drawer.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import { ListMusicIcon } from 'lucide-react';
+import { FileMusicIcon, ListMusicIcon } from 'lucide-react';
+import SongLibraryForm from '@/components/song-library/form.tsx';
+import { useLiveQuery } from 'dexie-react-hooks';
+import storage from '@/storage/songs';
 
 export default function SongLibrary() {
+  const songs = useLiveQuery(async () => {
+    return storage.songs.toArray();
+  }, []);
+
+  const [open, setOpen] = useState(false);
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -20,12 +30,27 @@ export default function SongLibrary() {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Song Library</DrawerTitle>
+          <div className="flex justify-between">
+            <DrawerTitle>Song Library</DrawerTitle>
+
+            <SongLibraryForm open={open} onOpenChange={setOpen}>
+              <Button className="space-x-1">
+                <FileMusicIcon />
+                <span>Create song</span>
+              </Button>
+            </SongLibraryForm>
+          </div>
         </DrawerHeader>
-        <div className="p-4">Songs will appear here ...</div>
+        <div className="p-4">
+          {songs?.length === 0 && <p>no songs created.</p>}
+          {songs?.map((song) => {
+            return <p key={song.id}>{song.name}</p>;
+          })}
+        </div>
+
         <DrawerFooter className="items-center">
           <DrawerClose asChild>
-            <Button variant="default" className="md:w-3/4">
+            <Button variant="outline" className="md:w-3/4">
               Close
             </Button>
           </DrawerClose>

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SettingsIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx';
-import { Label } from '@/components/ui/label.tsx';
+import { Label } from '@/components/ui/label';
 import useAudio from '@/hooks/useAudio.ts';
 import { Panner } from '@/components/audio-provider';
 import { PANNER_LEFT, PANNER_RIGHT, PANNER_STEREO } from '@/constants.ts';
