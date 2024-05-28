@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useCallback } from 'react';
 import useTheme from '@/hooks/useTheme';
 
-export default function ModeToggle() {
+export default function DarkModeToggle() {
   const { theme, setTheme } = useTheme();
   const isDarkMode = theme === 'dark';
 

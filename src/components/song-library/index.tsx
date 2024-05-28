@@ -1,61 +1,71 @@
-import { useState } from 'react';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger
-} from '@/components/ui/drawer.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { FileMusicIcon, ListMusicIcon } from 'lucide-react';
-import SongLibraryForm from '@/components/song-library/form.tsx';
 import { useLiveQuery } from 'dexie-react-hooks';
 import storage from '@/storage/songs';
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator
+} from '@/components/ui/command.tsx';
+import { useCallback } from 'react';
+import useAudio from '@/hooks/useAudio.ts';
 
-export default function SongLibrary() {
-  const songs = useLiveQuery(async () => {
-    return storage.songs.toArray();
-  }, []);
+interface Props {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
 
-  const [open, setOpen] = useState(false);
+export default function SongLibrary({ open, onOpenChange }: Props) {
+  const songs = useLiveQuery(() => storage.songs.toArray());
+
+  const { setBpm } = useAudio();
+
+  const hasSongs = songs?.length !== 0;
+  const onSelectHandler = useCallback(
+    (value: string) => {
+      if (!onOpenChange) return;
+      onOpenChange(false);
+
+      const selectedSong = songs?.find((song) => song.id?.toString() === value);
+      if (selectedSong) {
+        setBpm(selectedSong.bpm);
+      }
+    },
+    [onOpenChange, setBpm, songs]
+  );
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">
-          <ListMusicIcon />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <div className="flex justify-between">
-            <DrawerTitle>Song Library</DrawerTitle>
+    <CommandDialog open={open} onOpenChange={onOpenChange}>
+      <Command
+        filter={(value, search) => {
+          const song = songs?.find((song) => song.id?.toString() === value);
+          const matched = song?.name.toLowerCase().includes(search.toLowerCase());
+          return matched ? 1 : 0;
+        }}
+      >
+        <CommandInput placeholder="Type a command or search..." className="text-md" />
+        <CommandList>
+          {hasSongs && <CommandEmpty>No results found.</CommandEmpty>}
 
-            <SongLibraryForm open={open} onOpenChange={setOpen}>
-              <Button className="space-x-1">
-                <FileMusicIcon />
-                <span>Create song</span>
-              </Button>
-            </SongLibraryForm>
-          </div>
-        </DrawerHeader>
-        <div className="p-4">
-          {songs?.length === 0 && <p>no songs created.</p>}
-          {songs?.map((song) => {
-            return <p key={song.id}>{song.name}</p>;
-          })}
-        </div>
-
-        <DrawerFooter className="items-center">
-          <DrawerClose asChild>
-            <Button variant="outline" className="md:w-3/4">
-              Close
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+          <CommandGroup heading="Songs">
+            <CommandSeparator />
+            {hasSongs &&
+              songs?.map((song) => {
+                return (
+                  <CommandItem key={song.id} value={song.id?.toString()} onSelect={onSelectHandler}>
+                    <span className="mr-2">{song.name}</span>
+                    <kbd className="pointer-events-none select-none rounded border bg-amber-200 px-1.5 text-[10px] font-bold text-black">
+                      <span className="text-xs">{song.bpm}bpm</span>
+                    </kbd>
+                  </CommandItem>
+                );
+              })}
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </CommandDialog>
   );
 }
