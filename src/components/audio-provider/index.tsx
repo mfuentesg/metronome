@@ -36,8 +36,8 @@ type AudioProviderProps = {
 export const AudioProviderContext = createContext<AudioProviderState>(initialState);
 let interval = 0.0;
 let nextBeatTime = 0.0;
-const context = new AudioContext();
-const stereoPanner = context.createStereoPanner();
+let context: AudioContext;
+let stereoPanner: StereoPannerNode;
 
 export function AudioProvider({ children }: AudioProviderProps) {
   const [playing, setPlaying] = useState(false);
@@ -46,9 +46,12 @@ export function AudioProvider({ children }: AudioProviderProps) {
   const [panner, setPanner] = useState<Panner>(PANNER_STEREO);
 
   const playBeat = (time: number) => {
-    const osc = context.createOscillator();
+    const osc = new OscillatorNode(context, {
+      type: 'sine',
+      frequency: SOUND_FREQUENCY
+    });
+
     osc.connect(stereoPanner);
-    osc.frequency.value = SOUND_FREQUENCY;
     stereoPanner.connect(context.destination);
 
     osc.start(time);
@@ -78,6 +81,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
   }, [bpm, playing]);
 
   useEffect(() => {
+    if (!stereoPanner) return;
     stereoPanner.pan.value = panner;
   }, [panner]);
 
@@ -86,7 +90,13 @@ export function AudioProvider({ children }: AudioProviderProps) {
     bpm,
     panner,
     pause: () => setPlaying(false),
-    play: () => setPlaying(true),
+    play: () => {
+      if (!context) {
+        context = new AudioContext();
+        stereoPanner = context.createStereoPanner();
+      }
+      setPlaying(true);
+    },
     setBpm: setBpm,
     setPanner
   };
