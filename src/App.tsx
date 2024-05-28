@@ -35,6 +35,16 @@ export default function App() {
         <SongLibrary open={libraryOpen} onOpenChange={setLibraryOpen} />
         <SongLibraryForm open={formOpen} onOpenChange={setFormOpen} />
       </section>
+      <p className="fixed bottom-0 p-4 text-center w-full">
+        <span className="text-muted-foreground">Created by </span>
+        <a
+          className="text-black dark:text-white font-medium"
+          href="https://github.com/mfuentesg"
+          target="_blank"
+        >
+          @mfuentesg
+        </a>
+      </p>
     </main>
   );
 }
