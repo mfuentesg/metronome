@@ -4,7 +4,7 @@ import { SettingsIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import useAudio from '@/hooks/useAudio.ts';
-import { Panner } from '@/components/AudioProvider';
+import { Panner } from '@/components/audio-provider';
 import { PANNER_LEFT, PANNER_RIGHT, PANNER_STEREO } from '@/constants.ts';
 
 export default function Settings() {

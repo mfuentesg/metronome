@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { registerSW } from 'virtual:pwa-register';
 import { ThemeProvider } from '@/components/theme-provider';
-import { AudioProvider } from '@/components/AudioProvider';
+import { AudioProvider } from '@/components/audio-provider';
 
 import './index.css';
 
