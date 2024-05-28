@@ -50,10 +50,15 @@ export default function SongLibrary({ open, onOpenChange }: Props) {
         <CommandList>
           {hasSongs && <CommandEmpty>No results found.</CommandEmpty>}
 
-          <CommandGroup heading="Songs">
-            <CommandSeparator />
-            {hasSongs &&
-              songs?.map((song) => {
+          {!hasSongs && (
+            <CommandGroup>
+              <p className="p-2 text-center">No songs created yet</p>
+            </CommandGroup>
+          )}
+          {hasSongs && (
+            <CommandGroup heading="Songs">
+              <CommandSeparator />
+              {songs?.map((song) => {
                 return (
                   <CommandItem key={song.id} value={song.id?.toString()} onSelect={onSelectHandler}>
                     <span className="mr-2">{song.name}</span>
@@ -63,7 +68,8 @@ export default function SongLibrary({ open, onOpenChange }: Props) {
                   </CommandItem>
                 );
               })}
-          </CommandGroup>
+            </CommandGroup>
+          )}
         </CommandList>
       </Command>
     </CommandDialog>
