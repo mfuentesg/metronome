@@ -51,6 +51,7 @@ export default function SongLibraryForm({ children, open, onOpenChange }: Props)
     });
 
     onOpenChange(false);
+    form.reset();
     toast({
       title: 'Song created',
       description: `Your song "${values.name}" was created successfully`
@@ -70,7 +71,7 @@ export default function SongLibraryForm({ children, open, onOpenChange }: Props)
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input placeholder="My song ..." {...field} className="text-md" />
                   </FormControl>
