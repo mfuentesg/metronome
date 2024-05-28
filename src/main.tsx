@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { AudioProvider } from '@/components/audio-provider';
 
 import './index.css';
+import { Toaster } from '@/components/ui/toaster.tsx';
 
 const updateSW = registerSW({
   onNeedRefresh() {
@@ -21,6 +22,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AudioProvider>
         <App />
       </AudioProvider>
+
+      <Toaster />
     </ThemeProvider>
   </React.StrictMode>
 );
