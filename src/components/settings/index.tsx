@@ -5,7 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx';
 import { Label } from '@/components/ui/label';
 import useAudio from '@/hooks/useAudio.ts';
 import { Panner } from '@/components/audio-provider';
-import { PANNER_LEFT, PANNER_RIGHT, PANNER_STEREO } from '@/constants.ts';
+import { PANNER_LEFT, PANNER_RIGHT, PANNER_MONO } from '@/constants.ts';
 import { Slider } from '@/components/ui/slider.tsx';
 
 export default function Settings() {
@@ -30,11 +30,8 @@ export default function Settings() {
             <ToggleGroupItem value={PANNER_LEFT.toString()} onClick={setPannerHandler(PANNER_LEFT)}>
               Left Speaker
             </ToggleGroupItem>
-            <ToggleGroupItem
-              value={PANNER_STEREO.toString()}
-              onClick={setPannerHandler(PANNER_STEREO)}
-            >
-              Stereo
+            <ToggleGroupItem value={PANNER_MONO.toString()} onClick={setPannerHandler(PANNER_MONO)}>
+              Mono
             </ToggleGroupItem>
             <ToggleGroupItem
               value={PANNER_RIGHT.toString()}

@@ -2,12 +2,13 @@ import { createContext, useState, useEffect, type ReactNode } from 'react';
 import {
   PANNER_LEFT,
   PANNER_RIGHT,
-  PANNER_STEREO,
+  PANNER_MONO,
   DEFAULT_INTERVAL_TIMEOUT,
   SOUND_FREQUENCY
 } from '@/constants.ts';
+import * as timers from 'worker-timers';
 
-export type Panner = typeof PANNER_LEFT | typeof PANNER_RIGHT | typeof PANNER_STEREO;
+export type Panner = typeof PANNER_LEFT | typeof PANNER_RIGHT | typeof PANNER_MONO;
 
 type AudioProviderState = {
   playing: boolean;
@@ -24,7 +25,7 @@ type AudioProviderState = {
 const initialState: AudioProviderState = {
   playing: false,
   bpm: 120,
-  panner: PANNER_STEREO,
+  panner: PANNER_MONO,
   gain: 1.0,
   play: () => null,
   pause: () => null,
@@ -48,7 +49,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
   const [bpm, setBpm] = useState<number>(120);
   const [timesPerBeat] = useState<number>(1);
   const [gain, setGain] = useState<number>(1);
-  const [panner, setPanner] = useState<Panner>(PANNER_STEREO);
+  const [panner, setPanner] = useState<Panner>(PANNER_MONO);
 
   const playBeat = (time: number) => {
     const gainNode = new GainNode(context, { gain });
@@ -73,7 +74,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
       return;
     }
 
-    interval = setInterval(() => {
+    interval = timers.setInterval(() => {
       while (nextBeatTime < context.currentTime + 0.1) {
         playBeat(nextBeatTime);
         scheduleNextBeat();
@@ -81,7 +82,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
     }, DEFAULT_INTERVAL_TIMEOUT);
 
     return () => {
-      clearInterval(interval);
+      timers.clearInterval(interval);
     };
   }, [bpm, playing, gain]);
 
