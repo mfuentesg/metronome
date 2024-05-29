@@ -13,20 +13,24 @@ type AudioProviderState = {
   playing: boolean;
   panner: Panner;
   bpm: number;
+  gain: number;
   play: () => void;
   pause: () => void;
   setPanner: (pan: Panner) => void;
   setBpm: (bpm: number) => void;
+  setGain: (gain: number) => void;
 };
 
 const initialState: AudioProviderState = {
   playing: false,
   bpm: 120,
   panner: PANNER_STEREO,
+  gain: 1.0,
   play: () => null,
   pause: () => null,
   setPanner: () => 0,
-  setBpm: () => 120
+  setBpm: () => 120,
+  setGain: () => 1.0
 };
 
 type AudioProviderProps = {
@@ -43,19 +47,20 @@ export function AudioProvider({ children }: AudioProviderProps) {
   const [playing, setPlaying] = useState(false);
   const [bpm, setBpm] = useState<number>(120);
   const [timesPerBeat] = useState<number>(1);
+  const [gain, setGain] = useState<number>(1);
   const [panner, setPanner] = useState<Panner>(PANNER_STEREO);
 
   const playBeat = (time: number) => {
+    const gainNode = new GainNode(context, { gain });
     const osc = new OscillatorNode(context, {
       type: 'sine',
       frequency: SOUND_FREQUENCY
     });
 
-    osc.connect(stereoPanner);
-    stereoPanner.connect(context.destination);
+    osc.connect(gainNode).connect(stereoPanner).connect(context.destination);
 
     osc.start(time);
-    osc.stop(time + 0.03);
+    osc.stop(time + 0.05);
   };
 
   const scheduleNextBeat = () => {
@@ -78,7 +83,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
     return () => {
       clearInterval(interval);
     };
-  }, [bpm, playing]);
+  }, [bpm, playing, gain]);
 
   useEffect(() => {
     if (!stereoPanner) return;
@@ -89,6 +94,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
     playing,
     bpm,
     panner,
+    gain,
     pause: () => setPlaying(false),
     play: () => {
       if (!context) {
@@ -97,8 +103,9 @@ export function AudioProvider({ children }: AudioProviderProps) {
       }
       setPlaying(true);
     },
-    setBpm: setBpm,
-    setPanner
+    setBpm,
+    setPanner,
+    setGain
   };
 
   return <AudioProviderContext.Provider value={value}>{children}</AudioProviderContext.Provider>;
