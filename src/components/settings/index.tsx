@@ -48,7 +48,7 @@ export default function Settings() {
           <Label>Volume</Label>
           <div className="flex space-x-2">
             <Slider
-              min={20}
+              min={10}
               max={100}
               value={[roundedGain]}
               onValueChange={([newGain]) => {
