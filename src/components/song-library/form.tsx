@@ -1,11 +1,4 @@
-import React from 'react';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTrigger
-} from '@/components/ui/drawer.tsx';
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/components/ui/drawer.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { useForm } from 'react-hook-form';
@@ -23,12 +16,11 @@ import storage from '@/storage/songs';
 import { useToast } from '@/components/ui/use-toast';
 
 interface Props {
-  children?: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function SongLibraryForm({ children, open, onOpenChange }: Props) {
+export default function SongLibraryForm({ open, onOpenChange }: Props) {
   const { toast } = useToast();
 
   const formSchema = z.object({
@@ -60,7 +52,6 @@ export default function SongLibraryForm({ children, open, onOpenChange }: Props)
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>Create new song</DrawerHeader>
 
