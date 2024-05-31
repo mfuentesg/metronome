@@ -20,10 +20,9 @@ interface Props {
 
 export default function SongLibrary({ open, onOpenChange }: Props) {
   const songs = useLiveQuery(() => storage.songs.toArray());
-
   const { setBpm } = useAudio();
-
   const hasSongs = songs?.length !== 0;
+
   const onSelectHandler = useCallback(
     (value: string) => {
       if (!onOpenChange) return;
@@ -62,7 +61,7 @@ export default function SongLibrary({ open, onOpenChange }: Props) {
                 return (
                   <CommandItem key={song.id} value={song.id?.toString()} onSelect={onSelectHandler}>
                     <span className="mr-2">{song.name}</span>
-                    <kbd className="pointer-events-none select-none rounded border bg-amber-200 px-1.5 text-[10px] font-bold text-black">
+                    <kbd className="pointer-events-none select-none rounded border bg-amber-200 p-1.5 text-[10px] font-bold text-black">
                       <span className="text-xs">{song.bpm}bpm</span>
                     </kbd>
                   </CommandItem>

@@ -18,7 +18,7 @@ const initialState: ThemeProviderState = {
   setTheme: () => null
 };
 
-export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+export const ThemeContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({ children, storageKey = 'ui-theme', ...props }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -44,8 +44,8 @@ export function ThemeProvider({ children, storageKey = 'ui-theme', ...props }: T
   };
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <ThemeContext.Provider {...props} value={value}>
       {children}
-    </ThemeProviderContext.Provider>
+    </ThemeContext.Provider>
   );
 }

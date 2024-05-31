@@ -10,7 +10,7 @@ import * as timers from 'worker-timers';
 
 export type Panner = typeof PANNER_LEFT | typeof PANNER_RIGHT | typeof PANNER_MONO;
 
-type AudioProviderState = {
+type State = {
   playing: boolean;
   panner: Panner;
   bpm: number;
@@ -22,7 +22,7 @@ type AudioProviderState = {
   setGain: (gain: number) => void;
 };
 
-const initialState: AudioProviderState = {
+const initialState: State = {
   playing: false,
   bpm: 120,
   panner: PANNER_MONO,
@@ -34,17 +34,17 @@ const initialState: AudioProviderState = {
   setGain: () => 1.0
 };
 
-type AudioProviderProps = {
+type Props = {
   children: ReactNode;
 };
 
-export const AudioProviderContext = createContext<AudioProviderState>(initialState);
+export const AudioContext = createContext<State>(initialState);
 let interval = 0.0;
 let nextBeatTime = 0.0;
 let context: AudioContext;
 let stereoPanner: StereoPannerNode;
 
-export function AudioProvider({ children }: AudioProviderProps) {
+export function AudioProvider({ children }: Props) {
   const [playing, setPlaying] = useState(false);
   const [bpm, setBpm] = useState<number>(120);
   const [timesPerBeat] = useState<number>(1);
@@ -99,7 +99,7 @@ export function AudioProvider({ children }: AudioProviderProps) {
     pause: () => setPlaying(false),
     play: () => {
       if (!context) {
-        context = new AudioContext();
+        context = new window.AudioContext();
         stereoPanner = context.createStereoPanner();
       }
       setPlaying(true);
@@ -109,5 +109,5 @@ export function AudioProvider({ children }: AudioProviderProps) {
     setGain
   };
 
-  return <AudioProviderContext.Provider value={value}>{children}</AudioProviderContext.Provider>;
+  return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 }

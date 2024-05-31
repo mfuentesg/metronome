@@ -1,10 +1,10 @@
 import Dexie, { Table } from 'dexie';
 
-export interface Song {
+export type Song = {
   id?: string;
   name: string;
   bpm: number;
-}
+};
 
 class Songs extends Dexie {
   songs!: Table<Song>;
