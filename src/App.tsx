@@ -30,11 +30,11 @@ export default function App() {
         <Settings />
         <DarkModeToggle />
       </Header>
-      <section className="flex justify-center items-center px-10 h-[calc(100%-68px)]">
+      <section className="flex justify-center items-center flex-col px-10 h-[calc(100%-68px)]">
         <BpmControl />
-        <SongLibrary open={libraryOpen} onOpenChange={setLibraryOpen} />
-        <SongLibraryForm open={formOpen} onOpenChange={setFormOpen} />
       </section>
+      <SongLibrary open={libraryOpen} onOpenChange={setLibraryOpen} />
+      <SongLibraryForm open={formOpen} onOpenChange={setFormOpen} />
       <p className="fixed bottom-0 p-4 text-center w-full">
         <span className="text-muted-foreground">Created by </span>
         <a
