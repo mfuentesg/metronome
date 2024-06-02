@@ -1,34 +1,30 @@
-# React + TypeScript + Vite
+# Metronome
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Metronome is an offline first progressive web app (pwa) built on top of AudioContext browser API.
 
-Currently, two official plugins are available:
+Visit [metronome site](https://metronome.mfuentesg.dev) to see it in action.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md)
-  uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast
-  Refresh
+## Features
 
-## Expanding the ESLint configuration
+> All features are available in offline mode.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Audio panning (left, right and mono)
+- Create your own songs with custom bpm
+- Load songs from song library
+- Control sound volume
+- Builtin dark/light mode
 
-- Configure the top-level `parserOptions` property like this:
+## Development
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+This application was created with vite, just clone this project, install their dependencies using npm and
+execute `npm run dev` for local development.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked`
-  or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and
-  add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Help me keep making awesome stuff
+
+Contribute with me, supporting this project through.
+
+<a href="https://www.buymeacoffee.com/mfuentesg" target="_blank">
+   <img height="41" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" />
+</a>
+
+Happy coding!
