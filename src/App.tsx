@@ -33,8 +33,8 @@ export default function App() {
       <section className="flex justify-center items-center flex-col px-10 h-[calc(100%-68px)]">
         <BpmControl />
       </section>
-      <SongLibrary open={libraryOpen} onOpenChange={setLibraryOpen} />
       <SongLibraryForm open={formOpen} onOpenChange={setFormOpen} />
+      <SongLibrary open={libraryOpen} onOpenChange={setLibraryOpen} />
       <p className="fixed bottom-0 p-4 text-center w-full">
         <span className="text-muted-foreground">Created by </span>
         <a
